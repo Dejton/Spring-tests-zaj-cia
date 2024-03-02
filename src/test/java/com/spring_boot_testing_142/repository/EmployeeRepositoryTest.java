@@ -6,13 +6,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest // używa domyślnie in-memory database, testy są wykonywane w ramach transakcji, jest robiony Roll-Back na koniec testu
 //@SpringBootTest
@@ -154,5 +152,46 @@ class EmployeeRepositoryTest {
         assertThat(foundEmployee).isEqualTo(savedEmployee);
 
     }
+
+    @Test
+    void givenEmployee_whenFindByJPQLNative_thenReturnEmployee(){
+        // given
+        Employee savedEmployee = employeeRepository.save(employee);
+
+        // when
+        Employee foundEmployee = employeeRepository.findByNativeSQL(savedEmployee.getFirstName(), savedEmployee.getLastName()).get();
+
+        // then
+        assertThat(foundEmployee).isNotNull();
+        assertThat(foundEmployee).isEqualTo(savedEmployee);
+
+    }
     // testy dla zapytań z nazwami parametrów
+
+    @Test
+    void givenEmployee_whenFindByJPQLNamedParams_thenReturnEmployee(){
+        // given
+        Employee savedEmployee = employeeRepository.save(employee);
+
+        // when
+        Employee foundEmployee = employeeRepository.findByJPQLNamedParams(savedEmployee.getFirstName(), savedEmployee.getLastName()).get();
+
+        // then
+        assertThat(foundEmployee).isNotNull();
+        assertThat(foundEmployee).isEqualTo(savedEmployee);
+
+    }
+
+    void givenEmployee_whenFindByNativeSqlNamedParams_thenReturnEmployee(){
+        // given
+        Employee savedEmployee = employeeRepository.save(employee);
+
+        // when
+        Employee foundEmployee = employeeRepository.findByNativeSqlNamedParams(savedEmployee.getFirstName(), savedEmployee.getLastName()).get();
+
+        // then
+        assertThat(foundEmployee).isNotNull();
+        assertThat(foundEmployee).isEqualTo(savedEmployee);
+
+    }
 }
