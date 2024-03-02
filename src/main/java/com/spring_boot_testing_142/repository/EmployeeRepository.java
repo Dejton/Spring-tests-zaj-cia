@@ -20,7 +20,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<Employee> findByJPQLNamedParams(@Param("xyz")String firstName, String lastName); // @Param() dodajemy tylko gdy nazwa parametru jest inna niż nazwa pola
 
 
-    @Query(value = "select * from employees e where e.first_name = ?1 and e.last_name = ?2", nativeQuery = true)
+    @Query(value = "select * from employees e where e.first_name = ?1 and e.last_name = ?2",
+            nativeQuery = true)
     Optional<Employee> findByNativeSQL(String firstName, String lastName);
 
     @Query(value = "select * from employees e where e.first_name = :xyz and e.last_name = :lastName"

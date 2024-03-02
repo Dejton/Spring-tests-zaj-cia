@@ -181,7 +181,7 @@ class EmployeeRepositoryTest {
         assertThat(foundEmployee).isEqualTo(savedEmployee);
 
     }
-
+@Test
     void givenEmployee_whenFindByNativeSqlNamedParams_thenReturnEmployee(){
         // given
         Employee savedEmployee = employeeRepository.save(employee);
