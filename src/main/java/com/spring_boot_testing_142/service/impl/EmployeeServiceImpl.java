@@ -38,9 +38,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee updateEmployee(Employee updatedEmployee) {
         return employeeRepository.save(updatedEmployee);
     }
+@Override
+    public Optional<Employee> updateEmployee(long id, Employee updatedEmployee) {
+        return findById(id).map(savedEmployee -> {
+            savedEmployee.setFirstName(updatedEmployee.getFirstName());
+            savedEmployee.setLastName(updatedEmployee.getLastName());
+            savedEmployee.setEmail(updatedEmployee.getEmail());
+            return employeeRepository.save(savedEmployee);
+        });
+    }
 
     @Override
     public void deleteById(long id) {
-
+        employeeRepository.deleteById(id);
     }
 }

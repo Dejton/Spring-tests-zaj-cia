@@ -41,17 +41,17 @@ public class Employee {
         return new Builder();
     }
     public static class Builder{
-//        private long id;
+        private long id;
         private String firstName;
         private String lastName;
         private String email;
 
         public Builder() {
         }
-//        public Builder id(long id){
-//            this.id = id;
-//            return this;
-//        }
+        public Builder id(long id){
+            this.id = id;
+            return this;
+        }
         public Builder firstName(String firstName){
             this.firstName = firstName;
             return this;
@@ -69,5 +69,7 @@ public class Employee {
 //                    id,
                     firstName, lastName, email);
         }
+
+
     }
 }
