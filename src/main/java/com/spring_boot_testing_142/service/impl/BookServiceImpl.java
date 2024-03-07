@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookServiceImpl implements BookService{
@@ -17,33 +18,33 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public List<Book> findByGenre(String fantasy) {
-        return null;
+    public List<Book> findByGenre(String genre) {
+        return bookRepository.findByGenre(genre);
     }
 
     @Override
-    public List<Book> findByAuthorAndPublicationDate(String s, int i) {
-        return null;
+    public List<Book> findByAuthorAndPublicationDate(String author, int publicationDate) {
+        return bookRepository.findByAuthorAndPublicationDate(author,publicationDate);
     }
 
     @Override
     public int countBooksByPublicationDate(int publicationDate) {
-        return 0;
+        return bookRepository.countBooksByPublicationDate(publicationDate);
     }
 
     @Override
     public List<Book> findByAuthor(String author) {
-        return null;
+        return bookRepository.findByAuthor(author);
     }
 
     @Override
     public Double calculateAverageRatingByAuthor(String author) {
-        return null;
+        return bookRepository.calculateAverageRatingByAuthor(author);
     }
 
     @Override
     public List<Book> findBooksCheaperThen(BigDecimal price) {
-        return null;
+        return bookRepository.findBooksCheaperThen(price);
     }
 
     @Override
@@ -53,35 +54,66 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public List<Book> findRecentBooksByGenre(int year, String genre) {
-        return null;
+        return bookRepository.findRecentBooksByGenre(year,genre);
     }
 
     @Override
     public List<Book> findAllByIsAvailableIsTrue() {
-        return null;
+        return bookRepository.findAllByIsAvailableIsTrue();
     }
 
     @Override
-    public long countByGenre(String fantasy) {
-        return 0;
+    public long countByGenre(String genre) {
+        return bookRepository.countByGenre(genre);
     }
 
     @Override
     public List<Book> findMostExpensiveBook() {
-        return null;
+        return bookRepository.findMostExpensiveBook();
     }
 
     @Override
     public List<Book> findMostCheapestBook() {
-        return null;
+        return bookRepository.findMostCheapestBook();
     }
 
     @Override
     public List<Book> findBooksWithRatingAbove(int ratingThreshold) {
-        return null;
+        return bookRepository.findBooksWithRatingAbove(ratingThreshold);
     }
 
     public Book saveBook(Book book) {
         return bookRepository.save(book);
+    }
+
+    @Override
+    public List<Book> findAllBooks() {
+        return bookRepository.findAll();
+    }
+
+    @Override
+    public Optional<Book> findBookById(Long id) {
+        return bookRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Book> updateBook(long id, Book book) {
+        return findBookById(id).map(
+                savedBook -> {
+                    savedBook.setTitle(book.getTitle());
+                    savedBook.setAuthor(book.getAuthor());
+                    savedBook.setGenre(book.getGenre());
+                    savedBook.setRating(book.getRating());
+                    savedBook.setPrice(book.getPrice());
+                    savedBook.setPublicationDate(book.getPublicationDate());
+                    savedBook.setIsbn(book.getIsbn());
+                    return bookRepository.save(book);
+        });
+
+    }
+
+    @Override
+    public void deleteBook(Long id) {
+        bookRepository.deleteById(id);
     }
 }

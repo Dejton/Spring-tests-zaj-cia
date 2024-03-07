@@ -8,9 +8,18 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BookService {
-    List<Book> findByGenre(String fantasy);
+    Book saveBook(Book book);
 
-    List<Book> findByAuthorAndPublicationDate(String s, int i);
+    List<Book> findAllBooks();
+
+    Optional<Book> findBookById(Long id);
+
+    Optional<Book> updateBook(long id, Book book);
+
+    void deleteBook(Long id);
+    List<Book> findByGenre(String genre);
+
+    List<Book> findByAuthorAndPublicationDate(String author, int publicationDate);
 
     int countBooksByPublicationDate(int publicationDate);
 
@@ -26,7 +35,7 @@ public interface BookService {
 
     List<Book> findAllByIsAvailableIsTrue();
 
-    long countByGenre(String fantasy);
+    long countByGenre(String genre);
 
     List<Book> findMostExpensiveBook();
 

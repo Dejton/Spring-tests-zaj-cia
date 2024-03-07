@@ -178,7 +178,7 @@ class BookRepositoryTest {
         List<Book> booksList = bookRepository.findByAuthor(book.getAuthor());
         Double avgRating = bookRepository.calculateAverageRatingByAuthor(book.getAuthor());
 //        when
-
+        System.out.println(avgRating);
 //        then
         assertThat(avgRating).isNotNull();
         assertThat(avgRating).isEqualTo(booksList
@@ -216,7 +216,7 @@ class BookRepositoryTest {
 
     @DisplayName("test wyszukiwania wszystkich dostępnych książek (scenariusz pozytywny)")
     @Test
-    void testingFindingAllAvailableBooksWithCorrectBook() {
+    void testingFindingAllAvailableBooksPositiveScenario() {
 //        given
         Book book1 = new Book(2L, "Harry Potter", "fantasy", "J.K Rowling", 1950, "98765AE", new BigDecimal("29.90"), true, Arrays.asList(1, 9, 7, 6));
         Book book2 = new Book(3L, "Harry Potter", "fantasy", "J.K Rowling", 1950, "98765AD", new BigDecimal("29.90"), false, Arrays.asList(6, 7, 3, 4));
@@ -232,7 +232,22 @@ class BookRepositoryTest {
         assertThat(books).isNotEmpty();
     }
 
+@DisplayName("test wyszukiwania wszystkich dostępnych książek (scenariusz negatywny)")
+@Test
+void testingFindingAllAvailableBooksNegativeScenario() {
+//        given
+    Book book1 = new Book(2L, "Harry Potter", "fantasy", "J.K Rowling", 1950, "98765AE", new BigDecimal("29.90"), false, Arrays.asList(1, 9, 7, 6));
+    Book book2 = new Book(3L, "Harry Potter", "fantasy", "J.K Rowling", 1950, "98765AD", new BigDecimal("29.90"), false, Arrays.asList(6, 7, 3, 4));
+    Book book3 = new Book(4L, "Harry Potter", "fantasy", "J.K Rowling", 1950, "98765AS", new BigDecimal("29.90"), false, Arrays.asList(2, 5, 4, 3));
 
+    bookRepository.save(book1);
+    bookRepository.save(book2);
+    bookRepository.save(book3);
+//        when
+    List<Book> books = bookRepository.findAllByIsAvailableIsTrue();
+//        then
+    assertThat(books).isEmpty();
+}
 
     @DisplayName("test wyszukiwania niedawno dodanych książek w danym gatunku")
     @Test
@@ -330,6 +345,8 @@ class BookRepositoryTest {
         assertThat(books).isNotEmpty();
         assertThat(books).allMatch((b) -> b.getRating().stream().anyMatch(rating -> rating > threshold));
     }
+
+
 }
 
 
