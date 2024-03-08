@@ -88,6 +88,7 @@ class BookServiceImplTest {
     @Test
     void testingUpdateBook() {
 //        given
+        when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
         when(bookRepository.save(any(Book.class))).thenReturn(book);
         book.setAuthor("Adam Mickiewicz");
         book.setGenre("Dramat");

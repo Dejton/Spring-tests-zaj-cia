@@ -10,16 +10,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/employees")
-public class EmployeeController {
+public class EmployeeController {//TODO try to separate DB entities and models returned from API - DTO objects should be used
     private final EmployeeService  employeeService;
 
+    //TODO add validations to your model like @NotEmpty etc.
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Employee createEmployee(@RequestBody Employee employee) {
-        return employeeService.save(employee);
+        return employeeService.save(employee);//TODO this throws an exception, error handler is missing
     }
     @GetMapping
     public List<Employee> getEmployees() {

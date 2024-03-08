@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.CoreMatchers.is;
 
-@WebMvcTest
+@WebMvcTest(EmployeeController.class)
 class EmployeeControllerTest {
 //    testy tworzenia pracownika
 //    testy pobierania pracowników

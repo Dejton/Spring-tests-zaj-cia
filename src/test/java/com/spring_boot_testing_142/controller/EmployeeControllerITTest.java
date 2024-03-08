@@ -9,25 +9,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+import static org.assertj.core.api.BDDAssertions.then;
 import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -77,6 +71,33 @@ class EmployeeControllerITTest {
 
     }
 
+    @Test
+    @DisplayName("test tworzenia pracownika")
+    void shouldCreateNewEmployee() throws Exception {
+        // given
+        var givenRequestBody = """
+                {
+                  "firstName": "k",
+                  "lastName": "k",
+                  "email": "k@gmail.com"
+                }""";
+
+        // when
+        var actualResponse = mockMvc.perform(post("/api/employees")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(givenRequestBody))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.firstName", is("k")))
+                .andExpect(jsonPath("$.lastName", is("k")))
+                .andExpect(jsonPath("$.email", is("k@gmail.com")))
+                .andReturn();
+
+        // then
+        var actualResponseBody = actualResponse.getResponse().getContentAsString();
+        var createdEmployee = objectMapper.readValue(actualResponseBody, Employee.class);
+        then(employeeRepository.findById(createdEmployee.getId())).isPresent();
+    }
+
     @DisplayName("test pobierania pracowników")
     @Test
     void givenListOfEmployees_whenGetAll_thenReturnEmployeesList() throws Exception {
@@ -104,11 +125,15 @@ class EmployeeControllerITTest {
 //        when
         ResultActions response = mockMvc.perform(get("/api/employees/{id}", employee.getId()));
 //        then
+        var expectedResponseBody = """
+                {
+                  "id": %d,
+                  "firstName": "Adam",
+                  "lastName": "Małysz",
+                  "email": "adam@gmail.com"
+                }""".formatted(employee.getId());
         response.andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", is(employee.getFirstName())))
-                .andExpect(jsonPath("$.lastName", is(employee.getLastName())))
-                .andExpect(jsonPath("$.email", is(employee.getEmail())))
-                .andDo(print());
+                .andExpect(content().json(expectedResponseBody, true));
     }
 
     @DisplayName("test pobierania pracownika po id (negatywny scenariusz)")
@@ -170,6 +195,7 @@ class EmployeeControllerITTest {
 //        then
         response.andExpect(status().isOk())
                 .andDo(print());
+        //TODO check if it doesn't exist in DB - was actually removed
     }
 }
 

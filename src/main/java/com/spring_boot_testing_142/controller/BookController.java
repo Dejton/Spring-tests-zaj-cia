@@ -82,11 +82,11 @@ public class BookController {
     public List<Book> getAllAvailableIsTrue() {
         return bookService.findAllByIsAvailableIsTrue();
     }
-    @GetMapping("/countGenre/{genre}")
+    @GetMapping("/countGenre/{genre}")//TODO in rest everything is resource, try to redesign it a bit. E.g. you could have books statistics resource etc.
     public long countByGenre(@PathVariable String genre) {
         return bookService.countByGenre(genre);
     }
-    @GetMapping("/mostExpensive")
+    @GetMapping("/mostExpensive")//TODO this should be more query params then separated resource but nice to have
     public List<Book> getMostExpensive() {
         return bookService.findMostExpensiveBook();
     }
